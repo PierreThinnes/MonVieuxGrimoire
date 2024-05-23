@@ -37,14 +37,20 @@ app.use(mongoSanitize({
 
 //Utilisation de Helmet
 
-app.use(
-        helmet.contentSecurityPolicy({
-            directives: {
-                imgsrc: process.env.helmetImgSrc,
-            },
-            crossOriginResourcePolicy : false,
-        })
-);
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+      frameAncestors: ["'none'"],
+      baseUri: ["'self'"],
+    }
+  }));
 
 // Middleware gérant les erreurs de CORS
 app.use((req, res, next) => {

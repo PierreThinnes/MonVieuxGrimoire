@@ -1,16 +1,7 @@
 const { check, validationResult } = require('express-validator');
-const rateLimit = require('express-rate-limit');
 
-// Rate limiter
-const limiter = rateLimit({
-  windowMs: 3 * 60 * 1000, // 1 minute
-  max: 10, // limit each IP to 10 requests per windowMs
-  message: "Trop de requêtes effectuées, veuillez réessayer plus tard.",
-  standardHeaders: true,
-  legacyHeaders: false,
-});
 
-module.exports = limiter;
+
 
 // Middleware for email validation
 exports.checkMail = async (req, res, next) => {

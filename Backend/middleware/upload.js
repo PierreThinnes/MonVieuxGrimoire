@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
   // Nom des images => nom d'origine, remplacement des espaces et des points par des underscores, ajout d'un timestamp
   filename: (req, file, callback) => {
     const name = file.originalname.replace(/[\s.]+/g, '_');
-    const extension = MIME_TYPES[file.mimetype];
+    const extension = 'webp';
     callback(null, name + Date.now() + '.' + extension);
   }
 });
