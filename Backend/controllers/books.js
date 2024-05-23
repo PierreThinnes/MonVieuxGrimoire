@@ -116,7 +116,7 @@ exports.createRating = (req, res, next) => {
                 const userIdArray = newRatings.map(rating => rating.userId);
                 // On vérifie que l'utilisateur authentifié n'a jamais donné de note au livre en question
                 if (userIdArray.includes(req.auth.userId)) {
-                    res.status(403).json({ message : 'Not authorized' });
+                    res.status(403).json({ message : 'Already noted' });
                 } else {
                     // Ajout de la note
                     newRatings.push(ratingObject);

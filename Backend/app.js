@@ -1,9 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose")
-
+const helmet = require('helmet');
 const bookRoutes = require("./routes/book");
 const userRoutes = require("./routes/user");
-
+const mongoSanitize = require('express-mongo-sanitize');
 const path = require('path');
 
 require("dotenv").config()
@@ -28,6 +28,23 @@ const app = express();
 
 //Middleware permettant à Express d'extraire le corps Json des reaquetes POST
 app.use(express.json());
+
+// Middleware de sanitation des entrées
+app.use(mongoSanitize({
+        replaceWith: "_",
+})
+);
+
+//Utilisation de Helmet
+
+app.use(
+        helmet.contentSecurityPolicy({
+            directives: {
+                imgsrc: process.env.helmetImgSrc,
+            },
+            crossOriginResourcePolicy : false,
+        })
+);
 
 // Middleware gérant les erreurs de CORS
 app.use((req, res, next) => {

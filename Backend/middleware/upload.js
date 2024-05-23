@@ -40,6 +40,7 @@ module.exports.resizeImage = (req, res, next) => {
 
   sharp(filePath)
     .resize({ width: 206, height: 260 })
+    .toFormat('webp') // Conversion au format WebP
     .toFile(outputFilePath)
     .then(() => {
       // Remplacer le fichier original par le fichier redimensionné

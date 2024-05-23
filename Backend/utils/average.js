@@ -4,5 +4,5 @@ exports.average = (array) => {
     for (let nb of array) {
         sum += nb;
     };
-    return (sum/array.length).toFixed(1);
+    return (sum/array.length).toFixed(0);
 };
