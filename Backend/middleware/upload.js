@@ -28,29 +28,18 @@ const storage = multer.diskStorage({
 module.exports = multer({storage: storage}).single('image');
 
 // Redimensionnement de l'image
-module.exports.resizeImage = (req, res, next) => {
+module.exports.resizeImage = async (req, res, next) => {
   // On vérifie si un fichier a été téléchargé
-  if (!req.file) {
-    return next();
-  }
+  if (req.file) {
+    // Vérifie si le fichier a été modifié
+    console.log(req.file);
+    const newName = req.file.filename.split(".")[0];
+    req.file.filename = newName + ".webp";
 
-  const filePath = req.file.path;
-  const fileName = req.file.filename;
-  const outputFilePath = path.join('images', `resized_${fileName}`);
-
-  sharp(filePath)
-    .resize({ width: 206, height: 260 })
-    .toFormat('webp') // Conversion au format WebP
-    .toFile(outputFilePath)
-    .then(() => {
-      // Remplacer le fichier original par le fichier redimensionné
-      fs.unlink(filePath, () => {
-        req.file.path = outputFilePath;
-        next();
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      return next();
-    });
+    await sharp(req.file.path)
+        .resize(300)
+        .toFile(path.resolve(req.file.destination, newName + ".webp"));
+    fs.unlinkSync(req.file.path);
+}
+next();
 };

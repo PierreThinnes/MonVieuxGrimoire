@@ -7,8 +7,8 @@ const rateLimit = require('express-rate-limit');
 // Rate limiter
 
 const limiter = rateLimit({
-    windowMs: 3 * 60 * 1000, // 1 minute
-    max: 10, // limit each IP to 10 requests per windowMs
+    windowMs: 3 * 60 * 1000, // 3 minute
+    max: 3, // limit each IP to 10 requests per windowMs
     message: "Trop de requêtes effectuées, veuillez réessayer plus tard.",
     standardHeaders: true,
     legacyHeaders: false,

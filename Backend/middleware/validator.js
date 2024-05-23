@@ -16,7 +16,7 @@ exports.checkMail = async (req, res, next) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(425).json({ errors: errors.array() });
     }
 
     next();
@@ -24,7 +24,7 @@ exports.checkMail = async (req, res, next) => {
     res.status(500).json({ message: 'Erreur serveur lors de la validation de l\'email' });
   }
 };
-
+  
 // Middleware for password validation
 exports.checkPassword = async (req, res, next) => {
   try {
@@ -41,7 +41,7 @@ exports.checkPassword = async (req, res, next) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(425).json({ errors: errors.array() });
     }
 
     next();

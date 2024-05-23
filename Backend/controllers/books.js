@@ -5,7 +5,7 @@ const fs = require('fs');
 // Logique métier - Contrôleur
 
 // POST => Enregistrement d'un livre
-exports.createBook = (req, res, next) => {
+exports.createBook = (req, res) => {
     // Stockage de la requête sous forme de JSON dans une constante (requête sous la forme form-data à l'origine)
     const bookObject = JSON.parse(req.body.book);
     // Suppression du faux _id envoyé par le front
@@ -26,14 +26,14 @@ exports.createBook = (req, res, next) => {
 };
 
 // GET => Récupération d'un livre spécifique
-exports.getOneBook = (req, res, next) => {
+exports.getOneBook = (req, res) => {
     Book.findOne({ _id: req.params.id })
         .then(book => res.status(200).json(book))
         .catch(error => res.status(404).json({ error }));
 };
 
 // PUT => Modification d'un livre existant
-exports.modifyBook = (req, res, next) => {
+exports.modifyBook = (req, res) => {
     // Stockage de la requête en JSON dans une constante
     // (ici, nous recevons soit un élément form-data, soit des données JSON, selon si le fichier image a été modifié ou non)
     const bookObject = req.file ? {
@@ -69,7 +69,7 @@ exports.modifyBook = (req, res, next) => {
 
 
 // DELETE => Suppression d'un livre
-exports.deleteBook = (req, res, next) => {
+exports.deleteBook = (req, res) => {
     // Récupération du livre à supprimer
     Book.findOne({ _id: req.params.id })
         .then(book => {
@@ -93,7 +93,7 @@ exports.deleteBook = (req, res, next) => {
 };
 
 // GET => Récupération de tous les livres
-exports.getAllBooks = (req, res, next) => {
+exports.getAllBooks = (req, res) => {
     // Renvoie un tableau contenant tous les Books de la base de données
     Book.find()
         .then(books => res.status(200).json(books))
@@ -101,7 +101,7 @@ exports.getAllBooks = (req, res, next) => {
 };
 
 // POST => Création d'une note
-exports.createRating = (req, res, next) => {
+exports.createRating = (req, res) => {
     // On vérifie que la note est comprise entre 0 et 5
     if (0 <= req.body.rating <= 5) {
         // Stockage de la requête dans une constante
