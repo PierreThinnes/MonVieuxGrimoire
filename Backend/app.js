@@ -1,42 +1,50 @@
 const express = require("express");
-const mongoose = require("mongoose")
-const helmet = require('helmet');
+const mongoose = require("mongoose");
+const helmet = require("helmet");
 const bookRoutes = require("./routes/book");
 const userRoutes = require("./routes/user");
-const mongoSanitize = require('express-mongo-sanitize');
-const path = require('path');
+const mongoSanitize = require("express-mongo-sanitize");
+const path = require("path");
 
-require("dotenv").config()
-
+require("dotenv").config();
 
 const connexionMongoose = () => {
-    mongoose.connect(process.env.DBLINK, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .then(() => {
-        console.log("Connexion à MongoDB réussie !");
-    })
-    .catch((err) => {
-        console.error("Connexion à MongoDB échouée !", err);
-    });
+    mongoose
+        .connect(process.env.DBLINK, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
+        .then(() => {
+            console.log("Connexion à MongoDB réussie !");
+        })
+        .catch((err) => {
+            console.error("Connexion à MongoDB échouée !", err);
+        });
 };
 connexionMongoose();
 
 //Création de l'application
 const app = express();
 
+//permettre l'Utilisation de helmet qui bloque l'acces aux images
+app.use(
+    helmet.contentSecurityPolicy({
+        crossOriginResourcePolicy: false,
+    })
+);
+
 //Middleware permettant à Express d'extraire le corps Json des reaquetes POST
 app.use(express.json());
 
 // Middleware de sanitation des entrées
-app.use(mongoSanitize({
+app.use(
+    mongoSanitize({
         replaceWith: "_",
-})
+    })
 );
 
 //Utilisation de Helmet
-
+/*
 app.use(helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
@@ -51,24 +59,29 @@ app.use(helmet.contentSecurityPolicy({
       baseUri: ["'self'"],
     }
   }));
-
+*/
 // Middleware gérant les erreurs de CORS
 app.use((req, res, next) => {
     // Accès à notre API depuis n'importe quelle origine
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader("Access-Control-Allow-Origin", "*");
     // Autorisation d'ajouter les headers mentionnés aux requêtes envoyées vers notre API
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+    );
     // Autorisation d'envoyer des requêtes avec les méthodes mentionnées
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    );
     next();
 });
 
 // mise avant pour indiquer à Express qu'il faut gérer la ressource images de manière statique
-app.use("/images", express.static(path.join(__dirname, "images"))); 
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 // Enregistrement des routeurs
 app.use("/api/books", bookRoutes);
 app.use("/api/auth", userRoutes);
 
-
-module.exports = app
+module.exports = app;
